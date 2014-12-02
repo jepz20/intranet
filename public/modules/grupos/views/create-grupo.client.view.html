@@ -1,0 +1,35 @@
+<section data-ng-controller="GruposController" ng-init="find()">
+    <div class="page-header">
+        <h1>Crear Grupo</h1>
+    </div>
+    <div class="col-md-12">
+        <form class="form-horizontal" data-ng-submit="create()" novalidate>
+            <fieldset>
+                <div class="form-group">
+                    <label class="control-label" for="nombre">Nombre</label>
+                    <div class="controls">
+                        <input type="text" data-ng-model="nombre" id="nombre" class="form-control" placeholder="Nombre" required autofocus>
+                    </div>
+                    <label class="control-label" for="nombre">Grupo Padre</label>
+                    <div class="input-group">
+                        <div class="input-group-btn" style="width: 300px;">
+                            <ui-select ng-model="grupopadre.selected" theme="bootstrap" style="width: 300px;">
+                                <ui-select-match placeholder="Escoga un grupo padre...">{{$select.selected.nombre}}</ui-select-match>
+                                <ui-select-choices repeat="grupopadre in grupos | filter: $select.search">
+                                    <span ng-bind-html="grupopadre.nombre | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                            <span class="btn btn-default" ng-click="limpiaUiSelect()" ng-show="grupopadre.selected">X</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-default">
+                </div>
+                <div data-ng-show="error" class="text-danger">
+                    <strong data-ng-bind="error"></strong>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</section>

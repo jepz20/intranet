@@ -1,0 +1,62 @@
+[4mRunning "jshint:all" (jshint) task[24m
+
+[1m   public\modules\programas\controllers\programas.client.controller.js[22m
+     94 |[90m            c[39m
+                     ^ Expected an assignment or function call and instead saw an expression.
+     94 |[90m            c[39m
+                      ^ Missing semicolon.
+     97 |[90m            }[39m
+                      ^ Missing semicolon.
+     94 |[90m            c[39m
+                     ^ 'c' is not defined.
+[1m   public\modules\programas\services\programas.client.service.js[22m
+     30 |[90m        var deferred = $q.defer()[39m
+                                          ^ Missing semicolon.
+     34 |[90m            console.log('no files to log')[39m
+                                                   ^ Missing semicolon.
+     35 |[90m            deferred.reject("No files to upload");[39m
+                                                         ^ Strings must use singlequote.
+     61 |[90m            })[39m
+                       ^ Missing semicolon.
+     65 |[90m            var msg = xhr.responseText ? xhr.responseText : "An unknown error occurred posting to '" + uploadUrl + "'";[39m
+                                                                                                             ^ Strings must use singlequote.
+     65 |[90m            var msg = xhr.responseText ? xhr.responseText : "An unknown error occurred posting to '" + uploadUrl + "'";[39m
+                                                                                                                               ^ Strings must use singlequote.
+     69 |[90m        }[39m
+                  ^ Missing semicolon.
+     78 |[90m        xhr.open("POST", uploadUrl);[39m
+                                ^ Strings must use singlequote.
+[1m   config\express.js[22m
+     29 |[90m    app.use(Busboy({ immediate: true }));[39m
+                     ^ Missing 'new' prefix when invoking a constructor.
+[1m   app\controllers\programas.server.controller.js[22m
+    127 |[90m                    console.log(newPathImagen)[39m
+                                                       ^ Missing semicolon.
+    118 |[90m            var rootPath = path.normalize(__dirname + '/../..');[39m
+                                    ^ 'path' is not defined.
+    128 |[90m                    fs.readFile(imagen.path, function (err, data) {[39m
+                             ^ 'fs' is not defined.
+    135 |[90m                            fs.writeFile(newPathImagen, data);[39m
+                                     ^ 'fs' is not defined.
+
+[31m>> [39m17 errors in 83 files
+[33mWarning: Task "jshint:all" failed. [4mUsed --force, continuing.[24m[39m
+
+[4mRunning "csslint:all" (csslint) task[24m
+Linting public/modules/programas/css/programa.css...[31mERROR[39m
+[L5:C1]
+WARNING: Outlines should only be modified using :focus. Use of outline: none or outline: 0 should be limited to :focus rules. (outline-none) Browsers: All
+[32m>> [39m3 files lint free.
+
+[4mRunning "concurrent:default" (concurrent) task[24m
+[4mRunning "nodemon:dev" (nodemon) task[24m
+[4mRunning "watch" task[24m
+Waiting...
+[33m[nodemon] v1.2.1[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching: app/views/**/*.* gruntfile.js server.js config/**/*.js app/**/*.js[39m
+[32m[nodemon] starting `node --debug server.js`[39m
+
+[0m
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+¨Desea terminar el trabajo por lotes (S/N)? 

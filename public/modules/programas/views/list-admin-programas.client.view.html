@@ -1,0 +1,41 @@
+<section data-ng-controller="ProgramasController" data-ng-init="find()">
+    <table class="table table-striped table-hover table-bordered">
+        <tr>
+            <th class="text-center col-sm-2" >Nombre</th>
+            <th class="text-center col-sm-5">Url</th>
+            <th class="text-center col-sm-2">
+                <a href="/#!/programas/create">
+                    <i class="glyphicon glyphicon-plus-sign"></i> Crear Programa
+                </a>
+            </th>
+        </tr>
+        <tr>
+            <th class="text-center col-sm-2" >
+                <input class="form-control" type="text" placeholder="Buscar por Nombre" ng-model= "filtro.nombre">
+            </th>
+            <th class="text-center col-sm-5">
+                <input class="form-control" type="text" placeholder="Buscar por Url" ng-model= "filtro.url">
+            </th>
+            <th class="text-center col-sm-2">
+                <button tooltip="Limpiar Busqueda" class="btn btn-primary btn-sm" ng-click="limpiaBusqueda();">
+                    <span>
+                        <i class="glyphicon glyphicon-remove-circle"></i>
+                    </span>
+                    Limpiar Busqueda
+                </button>
+            </th>
+        </tr>
+        <tr ng-repeat="programa in programas | filter:{nombre: filtro.nombre, url: filtro.url}">
+            <td class="col-sm-2">{{programa.nombre}}</td>
+            <td class="col-sm-5">{{programa.url}}</td>
+            <td class="text-center col-sm-1">
+                <a tooltip="Editar Programa" class="btn" ng-click="ir('programas/' + programa._id + '/edit')">
+                    <i class="glyphicon glyphicon-edit"></i>
+                </a>
+                <a tooltip="Eliminar Programa" class="btn" data-ng-click="remove(programa);">
+                    <i class="glyphicon glyphicon-trash"></i>
+                </a>
+            </td>
+        </tr>
+    </table>
+</section>

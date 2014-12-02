@@ -1,0 +1,27 @@
+.content {
+	margin-top: 50px;
+}
+.undecorated-link:hover {
+	text-decoration: none;
+}
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+	display: none !important;
+}
+.ng-invalid.ng-dirty{
+    border-color:#FA787E;
+}
+.ng-valid.ng-dirty{
+    border-color:#78FA89;
+}
+/*Correcion a problemas con el dropdown e input-group-btn*/
+.input-group > .input-group-btn > .ui-select-bootstrap.dropdown {
+  /* Instead of relative */
+  position: static;
+  width: 2px;
+}
+
+.input-group > .input-group-btn > .ui-select-bootstrap > input.ui-select-search.form-control {
+  border-radius: 4px; /* FIXME hardcoded value :-/ */
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;  ;
+}

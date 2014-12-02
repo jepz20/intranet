@@ -1,0 +1,122 @@
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 999px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+.img-redonda {
+    border-radius: 25%;
+}
+
+.icono {
+        position: relative;
+        min-height: 1px;
+        float:left;
+        text-align:center;
+        width:50%;
+        height: 130px;
+        margin-bottom: 10px;
+        padding-top: 1%;
+    }
+.busqueda {
+    margin:20px;
+    width: 80%;
+}
+
+.right-inner-addon {
+    position: relative;
+}
+.right-inner-addon input {
+    padding-right: 30px;
+    z-index: -10;
+}
+.right-inner-addon i {
+    position: absolute;
+    color: #BDBDBD;
+    right: 0;
+    padding: 10px 12px;
+    z-index: 999;
+
+}
+.ng-drawer-overlay {
+  /* A dark translucent div that covers the whole screen */
+  position:fixed;
+  z-index:999;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background-color:#000000;
+  opacity: 0.5;
+}
+.ng-drawer-dialog {
+  z-index:1000;
+  position: fixed;
+  width: 50%;
+  height:100%;
+  top:50px;
+  background-color: #fff;
+  overflow-y:scroll;
+}
+.ng-drawer-dialog-content {
+  text-align: left;
+}
+.ng-drawer-close {
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.my-show-hide-animation {
+  position: absolute;
+  left: 0;
+}
+
+.my-show-hide-animation.ng-hide-add,
+.my-show-hide-animation.ng-hide-remove {
+  display:block!important;
+  -webkit-transition: all 0.7s;
+  -moz-transition: all 0.7s;
+  -ms-transition: all 0.7s;
+  -o-transition: all 0.7s;
+  transition: all 0.7s;
+  left: 0;
+}
+.my-show-hide-animation.ng-hide {
+  left: -100%;
+}
+
+@media (min-width: 992px) {
+    .icono {
+        position: relative;
+        min-height: 1px;
+        float:left;
+        padding-right: 10px;
+        padding-left: 10px;
+        text-align:center;
+        width:25%;
+        height: 130px;
+        margin-bottom: 10px;
+        padding-top: 1%;
+    }
+    .icono:hover {
+        border: 1px solid;
+        border-color: #EEEEEE;
+    }
+}
