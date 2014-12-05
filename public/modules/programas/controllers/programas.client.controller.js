@@ -69,7 +69,7 @@ angular.module('programas').controller('ProgramasController', ['$scope', '$state
 			$scope.programa.icono = icono_ext || $scope.programa.icono;
 
 			if ($scope.grupo.selected) {
-				$scope.programa.grupo = $scope.grupo.selected;
+				$scope.programa.grupo = $scope.grupo.selected._id;
 			} else {
 				$scope.programa.grupo = null;
 			}
@@ -207,3 +207,7 @@ angular.module('programas').controller('ProgramasController', ['$scope', '$state
   		};
 	}
 ]);
+
+
+
+//\b(?=\w*[al])\w+\b

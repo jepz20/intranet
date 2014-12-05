@@ -64,5 +64,5 @@ angular.module('programas').factory('Programas', ['$resource',
         toggleModal: toggleModal,
         drawer: drawer,
         escuchando: escuchando
-    }
+    };
 }]);
