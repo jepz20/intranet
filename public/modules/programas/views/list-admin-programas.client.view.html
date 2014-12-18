@@ -25,9 +25,9 @@
                 </button>
             </th>
         </tr>
-        <tr ng-repeat="programa in programas | filter:{nombre: filtro.nombre, url: filtro.url}">
-            <td class="col-sm-2">{{programa.nombre}}</td>
-            <td class="col-sm-5">{{programa.url}}</td>
+        <tr ng-repeat="programa in programas | filter:filtro | limitTo:9">
+            <td class="col-sm-2">{{::programa.nombre}}</td>
+            <td class="col-sm-5">{{::programa.url}}</td>
             <td class="text-center col-sm-1">
                 <a tooltip="Editar Programa" class="btn" ng-click="ir('programas/' + programa._id + '/edit')">
                     <i class="glyphicon glyphicon-edit"></i>

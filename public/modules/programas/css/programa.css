@@ -66,7 +66,7 @@
 .ng-drawer-dialog {
   z-index:1000;
   position: fixed;
-  width: 50%;
+  width: 97%;
   height:100%;
   top:50px;
   background-color: #fff;
@@ -110,13 +110,30 @@
         padding-right: 10px;
         padding-left: 10px;
         text-align:center;
-        width:25%;
+        width:24%;
         height: 130px;
         margin-bottom: 10px;
         padding-top: 1%;
     }
     .icono:hover {
         border: 1px solid;
-        border-color: #EEEEEE;
+        border-color: #d6d6d6;
+        cursor: pointer;
+    }
+
+    .icono:focus {
+        outline: none;
+        border: 1px solid;
+        border-color: #d6d6d6;
+    }
+
+    .ng-drawer-dialog {
+        z-index:1000;
+        position: fixed;
+        width: 50%;
+        height:93%;
+        top:50px;
+        background-color: #fff;
+        overflow-y:scroll;
     }
 }

@@ -15,11 +15,13 @@ angular.module('programas')
 
         if (filtro) {
             if (filtro.nombre || filtro.nombre !=='') {
-                var indiceComparativo, factor, indiceRepetido;
                 for (var a = 0; a < arreglo.length; a++) {
+                    var indiceComparativo, indiceRepetido;
                     var comparativoFiltro = filtro.nombre;
                     var comparativoPrograma = arreglo[a].nombre;
-                    var valorMatch = 0;
+                    var valorMatch = 0, posicionAnterior = 0, factorPosicion= 0,
+                    totalPosicion = 0, totalDistancia = 0, factorDistancia = 0,
+                    nuevaPosicion = 0;
                     var itemAInsertar = {};
                     comparativoFiltro = comparativoFiltro.replace('á','a');
                     comparativoFiltro = comparativoFiltro.replace('é','e');
@@ -37,8 +39,9 @@ angular.module('programas')
                     comparativoFiltro = comparativoFiltro.toUpperCase();
                     var resultado = {};
                     for (var i = 0; i < comparativoFiltro.length; i++) {
+                        nuevaPosicion = -1;
                         //si ya estaba la letra la busco desde la ultima ubicacion
-                         if (comparativoFiltro[i] in resultado) {
+                        if (comparativoFiltro[i] in resultado) {
                             //busco la ultima posicion que quedo guardada
                             indiceRepetido = resultado[comparativoFiltro[i]][resultado[comparativoFiltro[i]].length-1][0];
 
@@ -48,6 +51,11 @@ angular.module('programas')
                             //como ya existe como arreglo hago un push con los nuevos datos
                             resultado[comparativoFiltro[i]].push([indiceComparativo,i]);
 
+                            // Si la letra es repetida y es mayor que la posicion anterior tomo
+                            // esta posicion como la nueva posicion
+                            if (indiceRepetido >= posicionAnterior) {
+                                nuevaPosicion = indiceRepetido + 1;
+                            }
                          } else {
                             //si es primera vez que encuentra la letra
                             //busco desde la posicion 0
@@ -59,23 +67,63 @@ angular.module('programas')
                         //si la letra no existe me salgo
                         if ( indiceComparativo === -1 ) {
                             valorMatch = 0;
+                            totalDistancia = 0;
+                            totalPosicion = 0;
                             break;
                         }
-                        factor = 1 - ((Math.abs(indiceComparativo - i ) ) / comparativoPrograma.length );
-                        valorMatch = valorMatch + factor;
+
+                        //El factor de posicion determina si la letra esta en la misma posicion de busqueda
+                        //como de la palabra
+                        factorPosicion = ((Math.abs(indiceComparativo - i ) ) / comparativoPrograma.length );
+                        if ( factorPosicion === 0 ) {
+                            factorPosicion = 2;
+                        }
+
+                        if (nuevaPosicion === -1) {
+                            nuevaPosicion = comparativoPrograma.indexOf(comparativoFiltro[i],posicionAnterior);
+                        }
+
+                        //El factor de distancia determina si las letras estan continuas en la palabra a buscar
+                        // y la separacion entre las mismas
+                        //si no es la primera letra hago la comparativa de continuidad
+                        if ( i > 0) {
+                            factorDistancia = nuevaPosicion - posicionAnterior;
+                            posicionAnterior = nuevaPosicion;
+                            if (factorDistancia < 1) {
+                                factorDistancia = comparativoPrograma.length;
+                            }
+
+                            factorDistancia = 1 / factorDistancia;
+                            if ( factorDistancia === 1) {
+                                factorDistancia = 2;
+                            }
+                        } else {
+                            //si es la primera ves igualar la posicionAnterior a la primera letra
+                            posicionAnterior = nuevaPosicion;
+                        }
+
+                        totalDistancia = totalDistancia + factorDistancia;
+                        totalPosicion = totalPosicion + factorPosicion;
+                    }
+
+                    valorMatch = totalDistancia + totalPosicion;
+                    if ( comparativoPrograma.length >= comparativoFiltro.length ) {
+                        valorMatch = valorMatch / comparativoPrograma.length;
                     }
 
                     if (valorMatch !== 0) {
-                        console.log(arreglo[a].nombre + ':' + Math.round(valorMatch*100)/100);
-                        console.log(resultado);
+                        //console.log(arreglo[a].nombre, valorMatch, totalPosicion,totalDistancia, comparativoPrograma.length);
                         itemAInsertar = arreglo[a];
                         itemAInsertar.valorMatch = valorMatch;
                         arregloFinal.push(itemAInsertar);
                     }
 
                 }
-                console.log(arregloFinal);
-                arregloFinal = arregloFinal.sort(compara);
+                if (arregloFinal) {
+                    if (arregloFinal.length > 0) {
+                        arregloFinal = arregloFinal.sort(compara);
+                    }
+                }
                 return arregloFinal;
             } else {
                 return arreglo;

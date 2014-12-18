@@ -1,8 +1,9 @@
 'use strict';
 
 // Grupos controller
-angular.module('grupos').controller('GruposController', ['$scope', '$stateParams', '$location', '$http', 'Authentication', 'Grupos',
-	function($scope, $stateParams, $location, $http, Authentication, Grupos ) {
+angular.module('grupos').controller('GruposController', ['$scope', '$rootScope', '$stateParams', '$location', '$http',
+    '$window','Authentication', 'Grupos',
+	function($scope, $rootScope, $stateParams, $location, $http, $window, Authentication, Grupos ) {
 		$scope.authentication = Authentication;
 
 		// Create new Grupo
@@ -27,7 +28,10 @@ angular.module('grupos').controller('GruposController', ['$scope', '$stateParams
 
 			// Redirect after save
 			grupo.$save(function(response) {
-				$location.path('grupos/' + response._id);
+                if ($rootScope.programaAlmacenado) {
+                    $rootScope.programaAlmacenado.grupo = response;
+                }
+				$scope.regresar();
 
 				// Clear form fields
 				$scope.nombre = '';
@@ -91,5 +95,23 @@ angular.module('grupos').controller('GruposController', ['$scope', '$stateParams
         $scope.limpiaUiSelect = function () {
             $scope.grupopadre.selected = null;
         };
+
+        $scope.regresar = function() {
+            $window.history.back();
+        };
+
+        /**
+         *Redirige a la pagina que muestra el procedimiento y los pasos
+         @param {string} url pagina a la que se ira
+         */
+        $scope.ir = function(url) {
+            $location.path(url);
+        };
+
+        $scope.limpiaBusqueda = function() {
+            $scope.filtro = undefined;
+            $scope.busqueda = undefined;
+        };
+
 	}
 ]);

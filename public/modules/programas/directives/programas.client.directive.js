@@ -159,7 +159,6 @@ angular.module('programas')
             });
              $scope.$watch($attr.focusOn,function(_focusVal) {
                 $timeout(function() {
-                    console.log($attr.focusOn);
                     if ( $attr.focusOn ) {
                        $element[0].focus();
                     } else {

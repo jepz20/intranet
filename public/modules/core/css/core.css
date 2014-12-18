@@ -25,3 +25,11 @@
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;  ;
 }
+
+.input-group-btn-selective {
+  vertical-align:top;
+}
+
+.btn-selective {
+  padding:7px;
+}

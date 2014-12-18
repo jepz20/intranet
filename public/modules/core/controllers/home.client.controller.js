@@ -9,5 +9,9 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope','Aut
         $scope.escuchando = function ($event) {
             ManejoDrawer.escuchando($event);
         };
+
+        $scope.toggleModal = function () {
+            ManejoDrawer.toggleModal();
+        };
     }
 ]);

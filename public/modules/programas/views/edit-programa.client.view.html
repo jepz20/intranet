@@ -1,4 +1,4 @@
-<section data-ng-controller="ProgramasController" data-ng-init="findOne();buscaGrupos()">
+<section data-ng-controller="ProgramasController" data-ng-init="findOne();initCreaEdita();">
     <div class="page-header">
         <h1>Editar Programa</h1>
     </div>
@@ -16,15 +16,20 @@
                     </div>
                     <label class="control-label" for="nombre">Grupo</label>
                     <div class="input-group">
-                        <div class="input-group-btn" style="width: 300px;">
-                            <ui-select ng-model="grupo.selected" theme="bootstrap" style="width: 300px;">
+                            <ui-select ng-model="grupo.selected" theme="selectize" style="width: 300px;">
                                 <ui-select-match placeholder="Escoga un grupo...">{{$select.selected.nombre}}</ui-select-match>
                                 <ui-select-choices repeat="grupo in grupos | filter: $select.search">
                                     <span ng-bind-html="grupo.nombre | highlight: $select.search"></span>
                                 </ui-select-choices>
                             </ui-select>
-                            <span class="btn btn-default" ng-click="limpiaUiSelect()" ng-show="grupo.selected">X</span>
-                        </div>
+                            <div class="input-group-btn input-group-btn-selective" style="width: 300px;">
+                                <span class="btn btn-default btn-selective" ng-click="limpiaUiSelect()" ng-show="grupo.selected">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </span>
+                                <span class="btn btn-default btn-selective" ng-click="agregarGrupo();" ng-hide="grupo.selected" >
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </span>
+                            </div>
                     </div>
                     <label class="control-label" for="imagenPaso">Icono</label>
                     <div class="controls">
@@ -33,12 +38,12 @@
                             Buscar
                             <input type="file" file-input="fileImagen" accept="image/png,image/jpeg" name="imagen">
                         </span>
-                        <div class="btn btn-default" ng-click="borrarIcono()">X</div>
+                        <div class="btn btn-default" ng-click="borrarIcono()"><span class="glyphicon glyphicon-trash"></div>
                     </div>
                 </div>
                 <div class="form-group">
                     <input type="submit" class="btn btn-primary">
-                    <!--button class="btn btn-default" value="Subir Icono" ng-click="uploadIcono()">Subir Icono</button-->
+                    <span class="btn btn-default" ng-click="regresar();">Cancelar</span>
                 </div>
                 <div data-ng-show="error" class="text-danger">
                     <strong data-ng-bind="error"></strong>

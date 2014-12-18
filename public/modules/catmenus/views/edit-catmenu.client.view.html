@@ -1,23 +1,67 @@
 <section data-ng-controller="CatmenusController" data-ng-init="findOne()">
-    <div class="page-header">
-        <h1>Edit Catmenu</h1>
+<div class="page-header">
+        <h1>Nuevo Menu</h1>
     </div>
     <div class="col-md-12">
-        <form class="form-horizontal" data-ng-submit="update()" novalidate>
+        <form class="form-horizontal" data-ng-submit="create()" novalidate>
             <fieldset>
                 <div class="form-group">
-                    <label class="control-label" for="name">Name</label>
+                    <label class="control-label" for="name">Nombre</label>
                     <div class="controls">
-                        <input type="text" data-ng-model="catmenu.name" id="name" class="form-control" placeholder="Name" required>
+                        <input type="text" focus-on="{{focusMenu}}" data-ng-model="catmenu.nombre" id="name" class="form-control" placeholder="Nombre" required>
                     </div>
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Update" class="btn btn-default">
+                    <label class="control-label" for="programa">Programa</label>
+                        <input type="text" ng-model="programa.nombre" placeholder="Escriba el nombre del programa" typeahead="nombre as prog.nombre for prog in buscaProgramas($viewValue) | limitTo:5" typeahead-loading="loadingProgramas" class="form-control" typeahead-on-select='seleccionarPrograma($item)' typeahead-template-url="modules/catmenus/views/seleccionPrograma.html" id='programa' focus-on="{{focusPrograma}}">
+                    <i ng-show="loadingProcedimientos" class="glyphicon glyphicon-refresh"></i>
                 </div>
-				<div data-ng-show="error" class="text-danger">
-					<strong data-ng-bind="error"></strong>
-				</div>
+
+                <div data-ng-show="error" class="text-danger">
+                    <strong data-ng-bind="error"></strong>
+                </div>
             </fieldset>
         </form>
+        <table class="table table-striped table-hover table-bordered">
+            <tr>
+                <th class="text-center col-sm-2" >Nombre</th>
+                <th class="text-center col-sm-2" >Url</th>
+                <th class="text-center col-sm-2">
+                    <a href="/#!/programas/create">
+                        <i class="glyphicon glyphicon-plus-sign"></i> Crear Programa
+                    </a>
+                </th>
+            </tr>
+            <tr>
+                <th class="text-center col-sm-2" >
+                    <input class="form-control" type="text" placeholder="Buscar por Nombre" ng-model= "filtro.nombre">
+                </th>
+                <th class="text-center col-sm-2" >
+                    <input class="form-control" type="text" placeholder="Buscar por Url" ng-model= "filtro.url">
+                </th>
+                <th class="text-center col-sm-2">
+                    <button tooltip="Limpiar Busqueda" class="btn btn-primary btn-sm" ng-click="limpiaBusqueda();">
+                        <span>
+                            <i class="glyphicon glyphicon-remove-circle"></i>
+                        </span>
+                        Limpiar Busqueda
+                    </button>
+                </th>
+            </tr>
+            <tbody ui-sortable ng-model="programas">
+            <tr ng-repeat="programa in catmenu.programas | filter:filtro | limitTo:9">
+                <td class="col-sm-2">{{::catmenu.programa.nombre}}</td>
+                <td class="col-sm-2">{{::catmenu.programa.url}}</td>
+                <td class="text-center col-sm-1">
+                    <a tooltip="Editar Programa" class="btn" ng-click="ir('programas/' + programa._id + '/edit')">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                    <a tooltip="Eliminar programa" class="btn" data-ng-click="eliminarProgramaDeMenu(programa);">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </section>

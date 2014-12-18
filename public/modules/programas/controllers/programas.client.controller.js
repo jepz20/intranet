@@ -1,11 +1,13 @@
 'use strict';
 
 // Programas controller
-angular.module('programas').controller('ProgramasController', ['$scope', '$stateParams', '$location',
- '$window', 'Authentication', 'Programas', 'Grupos', 'CargarArchivo', 'ManejoDrawer',
- function($scope, $stateParams, $location, $window, Authentication, Programas, Grupos, CargarArchivo, ManejoDrawer ) {
+angular.module('programas').controller('ProgramasController', ['$scope', '$rootScope', '$stateParams', '$location',
+ '$window', '$timeout', 'Authentication', 'Programas', 'Grupos', 'CargarArchivo', 'ManejoDrawer',
+ function($scope, $rootScope, $stateParams, $location, $window, $timeout, Authentication, Programas, Grupos, CargarArchivo, ManejoDrawer ) {
 		$scope.authentication = Authentication;
 		// Create new Programa
+
+
 		$scope.create = function() {
 			var grupo,icono_ext;
 			if ($scope.fileImagen)
@@ -20,8 +22,8 @@ angular.module('programas').controller('ProgramasController', ['$scope', '$state
 			}
 			// Create new Programa object
 			var programa = new Programas ({
-				nombre: this.nombre,
-				url: this.url,
+				nombre: this.programa.nombre,
+				url: this.programa.url,
 				icono: icono_ext,
 				grupo: grupo
 			});
@@ -88,20 +90,9 @@ angular.module('programas').controller('ProgramasController', ['$scope', '$state
 
 		// Find a list of Programas
 		$scope.find = function() {
-			$scope.programas = Programas.query(function(response) {
+			Programas.query(function(response) {
 				//ordenar la informacion por grupo
-				var porGrupo = [];
-				for (var i = response.length - 1; i >= 0; i--) {
-					if(response[i].grupo) {
-						if (porGrupo.indexOf(response[i].grupo.nombre) === -1){
-							porGrupo.push(response[i].grupo.nombre);
-						}
-					} else {
-						if (porGrupo.indexOf('') === -1){
-							porGrupo.push('');
-						}
-					}
-				}
+				$scope.programas = response;
 			});
 		};
 
@@ -144,13 +135,10 @@ angular.module('programas').controller('ProgramasController', ['$scope', '$state
 		};
 
 		$scope.irAUrl = function (url,id) {
-			$scope.filtro = undefined;
-			$scope.poneFocus('filtro');
-			$window.open(url);
-		};
-
-		$scope.poneFocus = function (id) {
-			document.getElementById(id).focus();
+			$scope.toggleModal();
+			$timeout(function() {
+				$window.open(url);
+			},300);
 		};
 
 		$scope.borrarIcono = function () {
@@ -158,56 +146,84 @@ angular.module('programas').controller('ProgramasController', ['$scope', '$state
 			$scope.fileImagen = undefined;
 		};
 
-		    /**
+		/**
 	     *Redirige a la pagina que muestra el procedimiento y los pasos
 	     @param {string} url pagina a la que se ira
 	     */
 	    $scope.ir = function(url) {
 	        $location.path(url);
 	    };
-	    $scope.drawerShown = ManejoDrawer.drawer;
+
+	    $scope.agregarGrupo = function() {
+	    	$rootScope.programaAlmacenado = $scope.programa;
+			$scope.ir('/grupos/create');
+	    };
+
+		$scope.revisaAlmacenado = function() {
+			if ($rootScope.programaAlmacenado) {
+				$scope.programa = $rootScope.programaAlmacenado;
+				$scope.grupo.selected = $rootScope.programaAlmacenado.grupo;
+				$rootScope.programaAlmacenado = undefined;
+			}
+		};
 
   		$scope.toggleModal = function() {
     		ManejoDrawer.toggleModal();
   		};
 
-  		$scope.limpiarOCerrarDrawer = function($event) {
-  			console.log($event.keyCode);
-  			if ($scope.filtro) {
-  				if ($scope.filtro.nombre) {
-  					if ($scope.filtro.nombre === '') {
-						ManejoDrawer.toggleModal();
-  					}
-  					else {
-  						$scope.filtro.nombre = '';
-  					}
-  				} else
-					ManejoDrawer.toggleModal();
-  			} else {
-				ManejoDrawer.toggleModal();
+  		$scope.enterAlPrograma = function($event, url, id) {
+  			//Enter
+  			if ($event.keyCode === 13 && $event.target.tagName !== 'INPUT') {
+  				$scope.irAUrl(url,id);
+  				$event.preventDefault();
   			}
-  			$event.preventDefault();
   		};
 
-  		$scope.enterAlPrograma = function($event) {
-  			if ($scope.programasFiltrado) {
-  				if ($scope.programasFiltrado.constructor === Array) {
-  					$scope.irAUrl($scope.programasFiltrado[0].url );
-  				} else {
-					$scope.irAUrl($scope.programasFiltrado.url );
-  				}
+  		$scope.enterOEscAlFiltro = function($event) {
+  			if ($event.target.tagName === 'INPUT') {
+  				//Enter
+	  			if ($event.keyCode === 13) {
+	  				var url,id;
+	  				if ($scope.programasFiltrado) {
+	  					if ($scope.programasFiltrado.length > 0) {
+		  					url = $scope.programasFiltrado[0].url ;
+		  					id = $scope.programasFiltrado[0].id ;
+	  						$scope.irAUrl(url,id);
+	  					}
+	  				} else if ($scope.programas) {
+						url = $scope.programas[0].url;
+	  					id = $scope.programas[0].id ;
+	  					$scope.irAUrl(url,id);
+	  				}
+	  				$event.preventDefault();
+	  			}
+	  			if ($event.keyCode === 27) {
+	  				if ($scope.filtro) {
+	  					if ($scope.filtro.nombre) {
+	  						if ($scope.filtro.nombre.length > 0)
+	  							$scope.filtro = null;
+	  						else {
+	  							ManejoDrawer.toggleModal();
+	  						}
+	  					} else {
+	  						ManejoDrawer.toggleModal();}
+	  					$scope.filtro = null;
+	  				} else {
+	  					ManejoDrawer.toggleModal();
+	  				}
+	  				$event.preventDefault();
+	  			}
   			}
-  			$event.preventDefault();
   		};
 
-  		$scope.escuchando = function ($event) {
-  			if ($event.keyCode === 80) {
-  				$scope.toggleModal();
-  			}
+  		$scope.inicioCreaEdita = function() {
+  			$scope.buscaGrupos();
+  			$scope.revisaAlmacenado();
   		};
+
+        $scope.regresar = function() {
+            $window.history.back();
+        };
 	}
 ]);
 
-
-
-//\b(?=\w*[al])\w+\b

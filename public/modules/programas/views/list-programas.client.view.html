@@ -1,10 +1,10 @@
 <section data-ng-init="find()">
     <div class="busqueda right-inner-addon">
-        <input class="form-control" type="text" focus-on="listo" id="filtro" placeholder="Filtrar programa" ng-model= "filtro.nombre" autofocus ui-keyup="{27:'limpiarOCerrarDrawer($event)', 13 : 'enterAlPrograma($event)'}"/>
+        <input class="form-control" type="text" focus-on="listo" id="filtro" placeholder="Filtrar programa" ng-model= "filtro.nombre" autofocus ng-keydown="enterOEscAlFiltro($event)"/>
         <i class="glyphicon glyphicon-remove-circle" ng-click="limpiaBusqueda()" ng-show="filtro.nombre"></i>
         <i class="glyphicon glyphicon glyphicon-search" ng-hide="filtro.nombre"></i>
     </div>
-    <div data-ng-repeat="programa in programasFiltrado = (programas | textoNoExacto:filtro)" class="icono" ng-click="irAUrl(programa.url, programa._id)" >
+    <div data-ng-repeat="programa in programasFiltrado = (programas | textoNoExacto:filtro) | limitTo: 20" class="icono" ng-click="irAUrl(programa.url, programa._id)" id='programa{{$index}}' tabindex="0" ng-keypress="enterAlPrograma($event,programa.url, programa._id)">
         <div ng-icono="{url:programa.icono, nombre: programa.nombre, id:programa._id}"></div>
 		<span> {{programa.nombre}}</span>
     </div>

@@ -1,20 +1,36 @@
 <section data-ng-controller="GruposController" data-ng-init="find()">
-    <div class="page-header">
-        <h1>Grupos</h1>
-    </div>
-    <div class="list-group">
-        <a data-ng-repeat="grupo in grupos" data-ng-href="#!/grupos/{{grupo._id}}" class="list-group-item">
-			<small class="list-group-item-text">
-				Creado el
-				<span data-ng-bind="grupo.created | date:'medium'"></span>
-				por
-				<span data-ng-bind="grupo.user.displayName"></span>
-			</small>
-			<h4 class="list-group-item-heading" data-ng-bind="grupo.nombre"></h4>
-        </a>
-    </div>
-    <div class="alert alert-warning text-center" data-ng-hide="!grupos.$resolved || grupos.length">
-    	No Grupos yet, why don't you <a href="/#!/grupos/create">create one</a>?
-    </div>
+    <table class="table table-striped table-hover table-bordered">
+        <tr>
+            <th class="text-center col-sm-2" >Nombre</th>
+            <th class="text-center col-sm-2">
+                <a href="/#!/programas/create">
+                    <i class="glyphicon glyphicon-plus-sign"></i> Crear Grupo
+                </a>
+            </th>
+        </tr>
+        <tr>
+            <th class="text-center col-sm-2" >
+                <input class="form-control" type="text" placeholder="Buscar por Nombre" ng-model= "filtro.nombre">
+            </th>
+            <th class="text-center col-sm-2">
+                <button tooltip="Limpiar Busqueda" class="btn btn-primary btn-sm" ng-click="limpiaBusqueda();">
+                    <span>
+                        <i class="glyphicon glyphicon-remove-circle"></i>
+                    </span>
+                    Limpiar Busqueda
+                </button>
+            </th>
+        </tr>
+        <tr ng-repeat="grupo in grupos | filter:filtro | limitTo:9">
+            <td class="col-sm-2">{{::grupo.nombre}}</td>
+            <td class="text-center col-sm-1">
+                <a tooltip="Editar Grupo" class="btn" ng-click="ir('grupos/' + grupo._id + '/edit')">
+                    <i class="glyphicon glyphicon-edit"></i>
+                </a>
+                <a tooltip="Eliminar Grupo" class="btn" data-ng-click="remove(grupo);">
+                    <i class="glyphicon glyphicon-trash"></i>
+                </a>
+            </td>
+        </tr>
+    </table>
 </section>
-

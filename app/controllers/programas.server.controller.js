@@ -81,7 +81,78 @@ exports.delete = function(req, res) {
 /**
  * List of Programas
  */
-exports.list = function(req, res) { Programa.find().sort('-created').populate('user', 'displayName').populate('grupo').exec(function(err, programas) {
+exports.list = function(req, res) {
+
+    var sort = '{}'; //campo para hacer el sort, en caso de vacio por fecha de creacion
+    var limite = 99999; //cuantos datos devolvera
+    var query; //El query por el que se filtrara
+    var nombreConsulta;
+    var campos = {};
+   //busca si envio parametro para sort
+    if (req.query.sort) {
+        //si existe empieza a armar el string que se convertira en objeto tipo json
+        sort = '{"' + req.query.sort + '" :';
+        //determina si envio el tipo de sort y completa el string
+        if (req.query.tipoSort) {
+            sort = sort + ' ' + req.query.tipoSort + '}';
+        } else {
+            sort = sort + ' 1 }';
+        }
+    }
+    //convierte el string a json
+    sort = JSON.parse(sort);
+
+    //determina si envio limite de envio
+    if (req.query.limite) {
+        limite= req.query.limite;
+    }
+    query = '{';
+
+    if (req.query.nombre) {
+        nombreConsulta = new RegExp(req.query.nombre,'gi');
+        query = query + '"nombre": "' + nombreConsulta + '"';
+        campos = {};
+    }
+    else {
+        nombreConsulta = new RegExp('','gi');
+        campos = {};
+    }
+        //determina si se envio un query
+    if (req.query.campoQ && req.query.valorQ) {
+        //si quisieran mandar un 1 = 1 que no agregue los campos
+        if (req.query.campoQ.toString() !== req.query.valorQ.toString()) {
+            if (req.query.valorQ instanceof Array) {
+                query = query + ', "' + req.query.campoQ + '" : {"$in": [';
+                for (var i = 0; i < req.query.valorQ.length; i++) {
+                    if (typeof req.query.valorQ[i] === 'string') {
+                        query = query + '"' + req.query.valorQ[i] + '", ';
+                    } else {
+                        query = query + ', ' + req.query.valorQ[i];
+                    }
+                }
+                query = query.substring(0,query.length-2);
+                query = query + ']}';
+
+            } else {
+                if (typeof req.query.valorQ === 'string') {
+                    query = query + ', "' + req.query.campoQ + '" : "' + req.query.valorQ + '"';
+                } else {
+                    query = query + ', "' + req.query.campoQ + '" : ' + req.query.valorQ;
+                }
+            }
+        }
+    }
+    query = query + '}';
+    console.log('query');
+    console.log(query);
+    query = JSON.parse(query);
+    query.nombre = nombreConsulta;
+    Programa.find(query,campos)
+    .sort(sort)
+    .limit(limite)
+    .populate('user', 'displayName')
+    .populate('grupo')
+    .exec(function(err, programas) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)

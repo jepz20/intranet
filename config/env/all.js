@@ -16,8 +16,12 @@ module.exports = {
 				'public/lib/bootstrap/dist/css/bootstrap.css',
 				'public/lib/bootstrap/dist/css/bootstrap-theme.css',
 				'public/lib/angular-ui-select/dist/select.css',
+				'public/lib/selectize/dist/css/selectize.default.css',
+				'public/lib/select2/select2.css'
 			],
 			js: [
+				'public/lib/jquery/dist/jquery.min.js',
+				'public/lib/jquery-ui/jquery-ui.min.js',
 				'public/lib/angular/angular.js',
 				'public/lib/angular-resource/angular-resource.js',
 				'public/lib/angular-cookies/angular-cookies.js',
@@ -27,7 +31,8 @@ module.exports = {
 				'public/lib/angular-ui-router/release/angular-ui-router.js',
 				'public/lib/angular-ui-utils/ui-utils.js',
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
-				'public/lib/angular-ui-select/dist/select.min.js'
+				'public/lib/angular-ui-select/dist/select.min.js',
+				'public/lib/angular-ui-sortable/sortable.min.js'
 			]
 		},
 		css: [

@@ -72,15 +72,16 @@ exports.delete = function(req, res) {
 /**
  * List of Catmenus
  */
-exports.list = function(req, res) { Catmenu.find().sort('-created').populate('user', 'displayName').exec(function(err, catmenus) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(catmenus);
-		}
-	});
+exports.list = function(req, res) {
+		Catmenu.find().sort('-created').populate('user', 'displayName').exec(function(err, catmenus) {
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				res.jsonp(catmenus);
+			}
+		});
 };
 
 /**

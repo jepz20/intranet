@@ -1,6 +1,6 @@
-<section data-ng-controller="ProgramasController" ng-init="buscaGrupos();">
+<section data-ng-controller="ProgramasController" ng-init="inicioCreaEdita();">
     <div class="page-header">
-        <h1>NuevoPrograma</h1>
+        <h1>Nuevo Programa</h1>
     </div>
     <div class="col-md-12">
         <form class="form-horizontal" data-ng-submit="create()" novalidate name="formaPaso" id="formaPaso">
@@ -8,23 +8,28 @@
                 <div class="form-group">
                     <label class="control-label" for="nombre">Nombre</label>
                     <div class="controls">
-                        <input type="text" data-ng-model="nombre" id="nombre" class="form-control" placeholder="Nombre" required autofocus>
+                        <input type="text" data-ng-model="programa.nombre" id="nombre" class="form-control" placeholder="Nombre" required autofocus focus-on="listo">
                     </div>
                     <label class="control-label" for="url">Direccion</label>
                     <div class="controls">
-                        <input type="url" data-ng-model="url" id="url" class="form-control" placeholder="Direccion" required>
+                        <input type="url" data-ng-model="programa.url" id="url" class="form-control" placeholder="Direccion" required>
                     </div>
                     <label class="control-label" for="nombre">Grupo</label>
                     <div class="input-group">
-                        <div class="input-group-btn" style="width: 300px;">
-                            <ui-select ng-model="grupo.selected" theme="bootstrap" style="width: 300px;">
+                            <ui-select ng-model="grupo.selected" theme="selectize" style="width: 300px;">
                                 <ui-select-match placeholder="Escoga un grupo...">{{$select.selected.nombre}}</ui-select-match>
                                 <ui-select-choices repeat="grupo in grupos | filter: $select.search">
                                     <span ng-bind-html="grupo.nombre | highlight: $select.search"></span>
                                 </ui-select-choices>
                             </ui-select>
-                            <span class="btn btn-default" ng-click="limpiaUiSelect()" ng-show="grupo.selected">X</span>
-                        </div>
+                            <div class="input-group-btn input-group-btn-selective" style="width: 300px;">
+                                <span class="btn btn-default btn-selective" ng-click="limpiaUiSelect()" ng-show="grupo.selected">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </span>
+                                <span class="btn btn-default btn-selective" ng-click="agregarGrupo();" ng-hide="grupo.selected" >
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </span>
+                            </div>
                     </div>
                     <label class="control-label" for="imagenPaso">Icono</label>
                     <div class="controls">
@@ -37,7 +42,7 @@
                 </div>
                 <div class="form-group">
                     <input type="submit" class="btn btn-primary">
-                    <!--button class="btn btn-default" value="Subir Icono" ng-click="uploadIcono()">Subir Icono</button-->
+                    <span class="btn btn-default" ng-click="regresar();">Cancelar</span>
                 </div>
 				<div data-ng-show="error" class="text-danger">
 					<strong data-ng-bind="error"></strong>
