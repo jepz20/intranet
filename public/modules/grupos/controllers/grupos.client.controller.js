@@ -2,8 +2,8 @@
 
 // Grupos controller
 angular.module('grupos').controller('GruposController', ['$scope', '$rootScope', '$stateParams', '$location', '$http',
-    '$window','Authentication', 'Grupos',
-	function($scope, $rootScope, $stateParams, $location, $http, $window, Authentication, Grupos ) {
+    '$window','Authentication', 'Grupos','Almacenados',
+	function($scope, $rootScope, $stateParams, $location, $http, $window, Authentication, Grupos, Almacenados ) {
 		$scope.authentication = Authentication;
 
 		// Create new Grupo
@@ -28,17 +28,27 @@ angular.module('grupos').controller('GruposController', ['$scope', '$rootScope',
 
 			// Redirect after save
 			grupo.$save(function(response) {
-                if ($rootScope.programaAlmacenado) {
-                    $rootScope.programaAlmacenado.grupo = response;
-                }
+                manejaAlmacenado(response);
 				$scope.regresar();
-
 				// Clear form fields
 				$scope.nombre = '';
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
 			});
 		};
+
+        /**
+         *Prodecimiento que se debe ejecutar si existe un programa almacenado
+         **/
+        var manejaAlmacenado = function(response) {
+            var posicion = Almacenados.revisaAlmacenadoDestino('grupo');
+            if ( posicion >= 0)
+            {
+                if ($rootScope.almacenado[posicion].origen === 'programa') {
+                    $rootScope.almacenado[posicion].objeto.grupo = response;
+                }
+            }
+        };
 
 		// Remove existing Grupo
 		$scope.remove = function( grupo ) {

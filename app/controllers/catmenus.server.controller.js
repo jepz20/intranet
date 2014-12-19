@@ -57,6 +57,7 @@ exports.update = function(req, res) {
  */
 exports.delete = function(req, res) {
 	var catmenu = req.catmenu ;
+	Catmenu.remove({'nombre': 'Menu sin nombre'});
 
 	catmenu.remove(function(err) {
 		if (err) {
@@ -73,7 +74,7 @@ exports.delete = function(req, res) {
  * List of Catmenus
  */
 exports.list = function(req, res) {
-		Catmenu.find().sort('-created').populate('user', 'displayName').exec(function(err, catmenus) {
+		Catmenu.find({'nombre': {$ne: 'Menu sin nombre'} }).sort('-created').populate('user', 'displayName').exec(function(err, catmenus) {
 			if (err) {
 				return res.status(400).send({
 					message: errorHandler.getErrorMessage(err)
@@ -87,7 +88,11 @@ exports.list = function(req, res) {
 /**
  * Catmenu middleware
  */
-exports.catmenuByID = function(req, res, next, id) { Catmenu.findById(id).populate('user', 'displayName').exec(function(err, catmenu) {
+exports.catmenuByID = function(req, res, next, id) {
+ 		Catmenu.findById(id)
+ 		.populate('user', 'displayName')
+ 		.populate('programas')
+ 		.exec(function(err, catmenu) {
 		if (err) return next(err);
 		if (! catmenu) return next(new Error('Failed to load Catmenu ' + id));
 		req.catmenu = catmenu ;

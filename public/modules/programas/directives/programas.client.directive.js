@@ -150,19 +150,16 @@ angular.module('programas')
         link : function($scope,$element,$attr) {
             $scope.$watch($attr.focusOn,function(_focusVal) {
                 $timeout(function() {
-                    if ( $attr.focusOn ) {
+                    if ( $attr.focusOn === 'listo' ) {
                        $element[0].focus();
-                    } else {
-                        $element[0].blur();
                     }
                 });
             });
-             $scope.$watch($attr.focusOn,function(_focusVal) {
+
+            $attr.$observe('focusOn',function(_focusVal) {
                 $timeout(function() {
-                    if ( $attr.focusOn ) {
-                       $element[0].focus();
-                    } else {
-                        $element[0].blur();
+                    if ( _focusVal === 'listo' ) {
+                       $element[0].select();
                     }
                 });
             });

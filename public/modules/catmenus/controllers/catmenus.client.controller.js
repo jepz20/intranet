@@ -2,10 +2,21 @@
 
 // Catmenus controller
 angular.module('catmenus').controller('CatmenusController', ['$scope', '$stateParams', '$location', 'Authentication',
- 'Catmenus', '$http', function($scope, $stateParams, $location, Authentication, Catmenus, $http ) {
+ 'Catmenus', '$http', '$window', 'Almacenados', function($scope, $stateParams, $location, Authentication, Catmenus, $http, $window, Almacenados ) {
 		$scope.authentication = Authentication;
         $scope.seleccionProgramaActivo = '';
 		// Create new Catmenu
+        var edit = false;
+        $scope.$on('$locationChangeStart', function (event, next, current) {
+            if ($scope.catmenu) {
+                if (edit) {
+                    if ($scope.catmenu.nombre === 'Menu sin nombre') {
+                        $scope.remove($scope.catmenu);
+                    }
+                }
+            }
+        });
+
 		$scope.create = function() {
             console.log('hola');
 			// Create new Catmenu object
@@ -15,7 +26,7 @@ angular.module('catmenus').controller('CatmenusController', ['$scope', '$statePa
 
 			// Redirect after save
 			catmenu.$save(function(response) {
-				$location.path('catmenus/' + response._id + '/edit');
+				$scope.ir('catmenus/' + response._id + '/edit');
 
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
@@ -33,7 +44,7 @@ angular.module('catmenus').controller('CatmenusController', ['$scope', '$statePa
 				}
 			} else {
 				$scope.catmenu.$remove(function() {
-					$location.path('catmenus');
+					$scope.regresar();
 				});
 			}
 		};
@@ -42,8 +53,8 @@ angular.module('catmenus').controller('CatmenusController', ['$scope', '$statePa
 		$scope.update = function() {
 			var catmenu = $scope.catmenu ;
 
-			catmenu.$update(function() {
-				$location.path('catmenus/' + catmenu._id);
+			catmenu.$update(function(response) {
+
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
 			});
@@ -59,15 +70,18 @@ angular.module('catmenus').controller('CatmenusController', ['$scope', '$statePa
 			Catmenus.get({
 				catmenuId: $stateParams.catmenuId
 			}, function (response) {
+                edit = true;
                 $scope.catmenu  = response;
-                console.log('response');
-                console.log(response);
-                if (response.nombre !== 'Menu sin nombre') {
-                    console.log('hola con nombre',response.nombre,'Menu sin nombre');
+                var catmenuAlmacenado = Almacenados.revisaAlmacenadoOrigen('catmenu');
+                if (catmenuAlmacenado) {
+                    $scope.catmenu = catmenuAlmacenado.objeto;
+                    $scope.update();
+                }
+
+                if ($scope.catmenu.nombre !== 'Menu sin nombre') {
                     $scope.focusPrograma = 'listo';
                     $scope.focusMenu = null;
                 } else {
-                    console.log('hola sin nombre',response.nombre,'Menu sin nombre');
                     $scope.focusPrograma = null;
                     $scope.focusMenu = 'listo';
                 }
@@ -82,18 +96,21 @@ angular.module('catmenus').controller('CatmenusController', ['$scope', '$statePa
       *@return {object} programa con el nombre y la url
      */
     $scope.buscaProgramas = function(val) {
-        return $http.get('programas/', {
-            params: {
-                nombre: val,
-                limit: 10
-            }
-        }).then(function(res){
-            var programas = [];
-            angular.forEach(res.data, function(item){
-                programas.push(item);
+        if (val !=='' || val !== null) {
+            return $http.get('programas/', {
+                params: {
+                    nombre: val,
+                    limit: 10
+                }
+            }).then(function(res){
+                var programas = [];
+                angular.forEach(res.data, function(item){
+                    programas.push(item);
+                });
+                return programas;
             });
-            return programas;
-        });
+        }
+        else return null;
     };
 
     /**
@@ -101,12 +118,16 @@ angular.module('catmenus').controller('CatmenusController', ['$scope', '$statePa
      *@param {object} $item objeto que contiene la respuesta del typeahead
      */
     $scope.seleccionarPrograma = function($item) {
-        if (!$scope.programas) {
-            $scope.programas = [];
+        if (!$scope.catmenu.programas) {
+            $scope.catmenu.programas = [];
         }
-        $scope.programas.unshift($item);
+        $scope.catmenu.programas.unshift($item);
 
         $scope.programa = undefined;
+        console.log('seleccionarPrograma');
+        console.log($scope.catmenu);
+
+        $scope.update();
     };
 
     /**
@@ -117,5 +138,62 @@ angular.module('catmenus').controller('CatmenusController', ['$scope', '$statePa
         $location.path(url);
     };
 
-	}
-]);
+
+    /**
+     *Guarda el nombre del menu al presionar enter
+     @param {object} $event evento del teclado
+     **/
+     $scope.guardaNombre = function($event) {
+        //si es enter
+        if ($event.keyCode === 13) {
+            $scope.update();
+            $event.preventDefault();
+        }
+     };
+
+
+     var tmpProgramas = [];
+     /**
+     *Cuando se reordena arrastrando un item que guarde
+     */
+    $scope.sortableOptions = {
+        update: function(e, ui) {
+            tmpProgramas = $scope.catmenu.programas;
+        },
+        stop: function(e, ui) {
+            function arraysEqual(a, b) {
+              if (a === b) return true;
+              if (a === null || b === null) return false;
+              if (a.length !== b.length) return false;
+
+              // If you don't care about the order of the elements inside
+              // the array, you should sort both arrays here.
+
+              for (var i = 0; i < a.length; ++i) {
+                if (a[i]._id !== b[i]._id) return false;
+              }
+              return true;
+            }
+            if (arraysEqual(tmpProgramas,$scope.catmenu.programas)) {
+                $scope.update();
+            }
+        }
+    };
+
+    /**
+     *elimina del menu un programa
+     *@param programa programa a eliminar
+     **/
+    $scope.eliminarProgramaDeMenu = function(programa) {
+        $scope.catmenu.programas.splice($scope.catmenu.programas.indexOf(programa),1);
+        $scope.update();
+    };
+
+    $scope.crearProgramaDesdeMenu = function() {
+        Almacenados.agregaAlmacenado($scope.catmenu, 'catmenu', 'programa', 'programas/create');
+    };
+
+    $scope.regresar = function() {
+        $window.history.back();
+    };
+}]);

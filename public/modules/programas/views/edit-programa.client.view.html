@@ -1,4 +1,4 @@
-<section data-ng-controller="ProgramasController" data-ng-init="findOne();initCreaEdita();">
+<section data-ng-controller="ProgramasController" data-ng-init="findOne();">
     <div class="page-header">
         <h1>Editar Programa</h1>
     </div>
@@ -26,7 +26,7 @@
                                 <span class="btn btn-default btn-selective" ng-click="limpiaUiSelect()" ng-show="grupo.selected">
                                     <span class="glyphicon glyphicon-trash"></span>
                                 </span>
-                                <span class="btn btn-default btn-selective" ng-click="agregarGrupo();" ng-hide="grupo.selected" >
+                                <span class="btn btn-default btn-selective" ng-click="agregaAlmacenado(programa,'programa', 'grupo', '/grupos/create');" ng-hide="grupo.selected" >
                                     <span class="glyphicon glyphicon-plus"></span>
                                 </span>
                             </div>

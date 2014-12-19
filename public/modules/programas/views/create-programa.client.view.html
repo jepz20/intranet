@@ -8,11 +8,11 @@
                 <div class="form-group">
                     <label class="control-label" for="nombre">Nombre</label>
                     <div class="controls">
-                        <input type="text" data-ng-model="programa.nombre" id="nombre" class="form-control" placeholder="Nombre" required autofocus focus-on="listo">
+                        <input type="text" data-ng-model="programa.nombre" id="nombre" class="form-control" placeholder="Nombre" required autofocus focus-on="listo" siguiente-focus="url">
                     </div>
                     <label class="control-label" for="url">Direccion</label>
                     <div class="controls">
-                        <input type="url" data-ng-model="programa.url" id="url" class="form-control" placeholder="Direccion" required>
+                        <input type="url" data-ng-model="programa.url" id="url" class="form-control" placeholder="Direccion" required ng-focus="urlPreLlenado();">
                     </div>
                     <label class="control-label" for="nombre">Grupo</label>
                     <div class="input-group">
@@ -26,7 +26,7 @@
                                 <span class="btn btn-default btn-selective" ng-click="limpiaUiSelect()" ng-show="grupo.selected">
                                     <span class="glyphicon glyphicon-trash"></span>
                                 </span>
-                                <span class="btn btn-default btn-selective" ng-click="agregarGrupo();" ng-hide="grupo.selected" >
+                                <span class="btn btn-default btn-selective" ng-click="agregaAlmacenado(programa,'programa', 'grupo', '/grupos/create');" ng-hide="grupo.selected" >
                                     <span class="glyphicon glyphicon-plus"></span>
                                 </span>
                             </div>

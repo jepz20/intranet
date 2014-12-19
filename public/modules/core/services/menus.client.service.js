@@ -10,7 +10,7 @@ angular.module('core').service('Menus', [
 		// Define the menus object
 		this.menus = {};
 
-		// A private function for rendering decision 
+		// A private function for rendering decision
 		var shouldRender = function(user) {
 			if (user) {
 				if (!!~this.roles.indexOf('*')) {
@@ -163,4 +163,89 @@ angular.module('core').service('Menus', [
 		//Adding the topbar menu
 		this.addMenu('topbar');
 	}
-]);
+])
+.service('Almacenados', [ '$rootScope', '$location', function($rootScope, $location){
+
+ 	/**
+     *Almacena un objeto en el rootScope para que si crea otro objeto pueda regresar y utilizar
+     *el objeto creado
+     *@param {object} objeto el objeto que se va a guardar
+     *@param {string} origen el tipo de objeto que se esta guardando
+     *@param {string} destino el tipo de objeto que se esta guardando
+     *@param {url}  a que direccion va a redireccionar
+     */
+
+   var agregaAlmacenado = function(objeto, origen, destino, url) {
+    	var almacenado = {};
+    	almacenado.objeto = objeto;
+    	almacenado.destino = destino;
+    	almacenado.origen = origen;
+    	if ($rootScope.almacenado) {
+    		if ($rootScope.almacenado.length <= 0) {
+    			$rootScope.almacenado = [almacenado];
+    		} else $rootScope.almacenado.push(almacenado);
+    	} else $rootScope.almacenado = [almacenado];
+		ir(url);
+    };
+
+    /**
+     *Revisa si existe un almacenado que se produjo desde este origen
+     * y ejecuta un proceso
+     *@param {string} origen origen del almacenado
+     **/
+	var revisaAlmacenadoOrigen = function(origen) {
+		if (!origen) {
+			return false;
+		}
+		var existeAlmacenado = false;
+		if ($rootScope.almacenado && $rootScope.almacenado.length > 0){
+			for (var i = 0; i < $rootScope.almacenado.length; i++) {
+				if ($rootScope.almacenado[i].origen === origen) {
+					existeAlmacenado = true;
+					break;
+				}
+
+			}
+			if (existeAlmacenado) {
+				var objetoEncontrado = $rootScope.almacenado[i];
+				$rootScope.almacenado.splice(i,1);
+				return (objetoEncontrado);
+			}
+			else return null;
+		}
+	};
+
+    /**
+     *Revisa si existe un almacenado que se dirige a este destino
+     * y ejecuta un proceso
+     *@param {string} destino destino del almacenado
+     *@return {number} posicion en que se encuentra el objecto que lo llamo y si no lo encuentra -1
+     **/
+    var revisaAlmacenadoDestino = function(destino) {
+        var existeAlmacenado = false;
+        if ($rootScope.almacenado && $rootScope.almacenado.length > 0){
+            for (var i = 0; i < $rootScope.almacenado.length; i++) {
+                if ($rootScope.almacenado[i].destino === destino) {
+                    existeAlmacenado = true;
+                    return i;
+                }
+            }
+            return -1;
+        } else return -1;
+    };
+
+	/**
+     *Redirige a la pagina que muestra el procedimiento y los pasos
+     @param {string} url pagina a la que se ira
+     */
+    var ir = function(url) {
+        $location.path(url);
+    };
+
+    return {
+        agregaAlmacenado: agregaAlmacenado,
+        revisaAlmacenadoOrigen: revisaAlmacenadoOrigen,
+        revisaAlmacenadoDestino: revisaAlmacenadoDestino,
+        ir: ir
+    };
+}]);

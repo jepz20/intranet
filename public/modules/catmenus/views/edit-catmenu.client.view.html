@@ -1,14 +1,14 @@
 <section data-ng-controller="CatmenusController" data-ng-init="findOne()">
 <div class="page-header">
-        <h1>Nuevo Menu</h1>
+        <h1>Menu</h1>
     </div>
     <div class="col-md-12">
-        <form class="form-horizontal" data-ng-submit="create()" novalidate>
+        <form class="form-horizontal" novalidate>
             <fieldset>
                 <div class="form-group">
                     <label class="control-label" for="name">Nombre</label>
                     <div class="controls">
-                        <input type="text" focus-on="{{focusMenu}}" data-ng-model="catmenu.nombre" id="name" class="form-control" placeholder="Nombre" required>
+                        <input type="text" focus-on="{{focusMenu}}" data-ng-model="catmenu.nombre" id="name" class="form-control" placeholder="Nombre" required ng-keypress="guardaNombre($event)" siguiente-focus="programa">
                     </div>
                 </div>
                 <div class="form-group">
@@ -27,7 +27,7 @@
                 <th class="text-center col-sm-2" >Nombre</th>
                 <th class="text-center col-sm-2" >Url</th>
                 <th class="text-center col-sm-2">
-                    <a href="/#!/programas/create">
+                    <a ng-click="crearProgramaDesdeMenu()";>
                         <i class="glyphicon glyphicon-plus-sign"></i> Crear Programa
                     </a>
                 </th>
@@ -48,10 +48,10 @@
                     </button>
                 </th>
             </tr>
-            <tbody ui-sortable ng-model="programas">
-            <tr ng-repeat="programa in catmenu.programas | filter:filtro | limitTo:9">
-                <td class="col-sm-2">{{::catmenu.programa.nombre}}</td>
-                <td class="col-sm-2">{{::catmenu.programa.url}}</td>
+            <tbody ui-sortable="sortableOptions" ng-model="catmenu.programas">
+            <tr ng-repeat="programa in catmenu.programas | filter:filtro">
+                <td class="col-sm-2">{{::programa.nombre}}</td>
+                <td class="col-sm-2">{{::programa.url}}</td>
                 <td class="text-center col-sm-1">
                     <a tooltip="Editar Programa" class="btn" ng-click="ir('programas/' + programa._id + '/edit')">
                         <i class="glyphicon glyphicon-edit"></i>

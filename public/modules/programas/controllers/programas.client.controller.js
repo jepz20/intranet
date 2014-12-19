@@ -2,12 +2,11 @@
 
 // Programas controller
 angular.module('programas').controller('ProgramasController', ['$scope', '$rootScope', '$stateParams', '$location',
- '$window', '$timeout', 'Authentication', 'Programas', 'Grupos', 'CargarArchivo', 'ManejoDrawer',
- function($scope, $rootScope, $stateParams, $location, $window, $timeout, Authentication, Programas, Grupos, CargarArchivo, ManejoDrawer ) {
+ '$window', '$timeout', 'Authentication', 'Programas', 'Grupos', 'CargarArchivo', 'ManejoDrawer', 'Almacenados',
+ function($scope, $rootScope, $stateParams, $location, $window, $timeout, Authentication, Programas, Grupos, CargarArchivo, ManejoDrawer, Almacenados ) {
 		$scope.authentication = Authentication;
+
 		// Create new Programa
-
-
 		$scope.create = function() {
 			var grupo,icono_ext;
 			if ($scope.fileImagen)
@@ -30,10 +29,20 @@ angular.module('programas').controller('ProgramasController', ['$scope', '$rootS
 
 			// Redirect after save
 			programa.$save(function(response) {
-				if (response.icono)
-					if (response.icono.length > 0)
+				if (response.icono) {
+					if (response.icono.length > 0) {
 						$scope.uploadIcono(response.icono);
-				$location.path('programas/admin');
+					}
+				}
+
+		        var posicion = Almacenados.revisaAlmacenadoDestino('programa');
+	            if ( posicion >= 0)
+	            {
+	                if ($rootScope.almacenado[posicion].origen === 'catmenu') {
+	                    $rootScope.almacenado[posicion].objeto.programas.unshift(response);
+	                }
+	            }
+				$scope.regresar();
 
 				// Clear form fields
 				$scope.name = '';
@@ -82,7 +91,7 @@ angular.module('programas').controller('ProgramasController', ['$scope', '$rootS
 				if (icono_ext) {
 					$scope.uploadIcono(response.icono);
 				}
-				$location.path('programas/admin');
+				$scope.regresar();
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
 			});
@@ -102,6 +111,7 @@ angular.module('programas').controller('ProgramasController', ['$scope', '$rootS
 				programaId: $stateParams.programaId
 			}, function(response) {
 				$scope.grupo.selected = response.grupo;
+				$scope.inicioCreaEdita();
 			});
 		};
 
@@ -154,18 +164,19 @@ angular.module('programas').controller('ProgramasController', ['$scope', '$rootS
 	        $location.path(url);
 	    };
 
-	    $scope.agregarGrupo = function() {
-	    	$rootScope.programaAlmacenado = $scope.programa;
-			$scope.ir('/grupos/create');
-	    };
 
-		$scope.revisaAlmacenado = function() {
-			if ($rootScope.programaAlmacenado) {
-				$scope.programa = $rootScope.programaAlmacenado;
-				$scope.grupo.selected = $rootScope.programaAlmacenado.grupo;
-				$rootScope.programaAlmacenado = undefined;
-			}
-		};
+	    /**
+	     *Almacena un objeto en el rootScope para que si crea otro objeto pueda regresar y utilizar
+	     *el objeto creado
+	     *@param {object} objeto el objeto que se va a guardar
+	     *@param {string} origen el tipo de objeto que se esta guardando
+	     *@param {string} destino el tipo de objeto que se esta guardando
+	     *@param {url}  a que direccion va a redireccionar
+	     */
+
+	    $scope.agregaAlmacenado = function(objeto, origen, destino, url) {
+	    	Almacenados.agregaAlmacenado(objeto, origen, destino, url);
+	    };
 
   		$scope.toggleModal = function() {
     		ManejoDrawer.toggleModal();
@@ -218,11 +229,23 @@ angular.module('programas').controller('ProgramasController', ['$scope', '$rootS
 
   		$scope.inicioCreaEdita = function() {
   			$scope.buscaGrupos();
-  			$scope.revisaAlmacenado();
+  			var programaAlmacenado = Almacenados.revisaAlmacenadoOrigen('programa');
+  			if (programaAlmacenado) {
+  				$scope.programa = programaAlmacenado.objeto;
+  				if (programaAlmacenado.destino === 'grupo') {
+  					$scope.grupo.selected = $scope.programa.grupo;
+  				}
+  			}
   		};
 
         $scope.regresar = function() {
             $window.history.back();
+        };
+
+        $scope.urlPreLlenado = function() {
+        	if ($scope.programa.url === '' || $scope.programa.url === undefined) {
+        		$scope.programa.url = 'http://';
+        	}
         };
 	}
 ]);

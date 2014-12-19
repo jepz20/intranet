@@ -143,8 +143,6 @@ exports.list = function(req, res) {
         }
     }
     query = query + '}';
-    console.log('query');
-    console.log(query);
     query = JSON.parse(query);
     query.nombre = nombreConsulta;
     Programa.find(query,campos)
