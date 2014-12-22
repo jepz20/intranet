@@ -7,6 +7,6 @@ angular.module('catmenus').run(['Menus',
         Menus.addMenuItem('topbar', 'MenusUsuario', 'menusUsuario', 'dropdown', '/menusUsuario(/create)?');
         Menus.addSubMenuItem('topbar', 'menusUsuario', 'Listar Menus', 'catmenus');
         Menus.addSubMenuItem('topbar', 'menusUsuario', 'Nuevo Menu', 'catmenus/create');
-        Menus.addSubMenuItem('topbar', 'menusUsuario', 'AdministrarMenus', 'catmenus/admin');
+        Menus.addSubMenuItem('topbar', 'menusUsuario', 'Asignar Menu a Usuario', 'catmenus/asignar');
     }
 ]);

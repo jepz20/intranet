@@ -13,6 +13,10 @@ angular.module('catmenus').config(['$stateProvider',
 			url: '/catmenus/create',
 			templateUrl: 'modules/catmenus/views/create-catmenu.client.view.html'
 		}).
+		state('asignaCatmenu', {
+			url: '/catmenus/asignar',
+			templateUrl: 'modules/catmenus/views/asignar-catmenu.client.view.html'
+		}).
 		state('viewCatmenu', {
 			url: '/catmenus/:catmenuId',
 			templateUrl: 'modules/catmenus/views/view-catmenu.client.view.html'

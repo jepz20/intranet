@@ -13,7 +13,7 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="programa">Programa</label>
-                        <input type="text" ng-model="programa.nombre" placeholder="Escriba el nombre del programa" typeahead="nombre as prog.nombre for prog in buscaProgramas($viewValue) | limitTo:5" typeahead-loading="loadingProgramas" class="form-control" typeahead-on-select='seleccionarPrograma($item)' typeahead-template-url="modules/catmenus/views/seleccionPrograma.html" id='programa' focus-on="{{focusPrograma}}">
+                    <input type="text" ng-model="programa.nombre" placeholder="Escriba el nombre del programa" typeahead="nombre as prog.nombre for prog in buscaProgramas($viewValue) | limitTo:5" typeahead-loading="loadingProgramas" class="form-control" typeahead-on-select='seleccionarPrograma($item)' typeahead-template-url="modules/catmenus/views/seleccionPrograma.html" id='programa' focus-on="{{focusPrograma}}">
                     <i ng-show="loadingProcedimientos" class="glyphicon glyphicon-refresh"></i>
                 </div>
 
@@ -27,7 +27,7 @@
                 <th class="text-center col-sm-2" >Nombre</th>
                 <th class="text-center col-sm-2" >Url</th>
                 <th class="text-center col-sm-2">
-                    <a ng-click="crearProgramaDesdeMenu()";>
+                    <a class="puntero" ng-click="crearProgramaDesdeMenu()";>
                         <i class="glyphicon glyphicon-plus-sign"></i> Crear Programa
                     </a>
                 </th>
