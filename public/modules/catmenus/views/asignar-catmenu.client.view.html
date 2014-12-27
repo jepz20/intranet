@@ -1,19 +1,19 @@
 <section data-ng-controller="CatmenusController">
 <div class="page-header">
-        <h1>Menu</h1>
+        <h1>Asignar Menu</h1>
     </div>
     <div class="col-md-12">
         <form class="form-horizontal" novalidate>
             <fieldset>
                 <div class="form-group">
-                     <label class="control-label" for="programa">Usuario</label>
-                    <input type="text" ng-model="programa.nombre" placeholder="Escriba el nombre del programa" typeahead="nombre as prog.nombre for prog in buscaProgramas($viewValue) | limitTo:5" typeahead-loading="loadingProgramas" class="form-control" typeahead-on-select='seleccionarPrograma($item)' typeahead-template-url="modules/catmenus/views/seleccionPrograma.html" id='programa' focus-on="listo" autofocus>
-                    <i ng-show="loadingProcedimientos" class="glyphicon glyphicon-refresh"></i>
+                     <label class="control-label" for="usuario">Usuario</label>
+                    <input type="text" ng-model="usuario.username" placeholder="Escriba el nombre del usuario" typeahead="nombre as usua.username for usua in buscaUsuarios($viewValue) | limitTo:5" typeahead-loading="loadingUsuarios" class="form-control" typeahead-on-select='seleccionarUsuario($item)' typeahead-template-url="modules/catmenus/views/seleccionUsuario.html" id='usuario' focus-on="{{focusUsuario}}" siguiente-focus="catmenu">
+                    <i ng-show="loadingUsuarios" class="glyphicon glyphicon-refresh"></i>
                 </div>
                 <div class="form-group">
-                    <label class="control-label" for="programa">Menu</label>
-                    <input type="text" ng-model="programa.nombre" placeholder="Escriba el nombre del programa" typeahead="nombre as prog.nombre for prog in buscaProgramas($viewValue) | limitTo:5" typeahead-loading="loadingProgramas" class="form-control" typeahead-on-select='seleccionarPrograma($item)' typeahead-template-url="modules/catmenus/views/seleccionPrograma.html" id='programa' focus-on="{{focusPrograma}}">
-                    <i ng-show="loadingProcedimientos" class="glyphicon glyphicon-refresh"></i>
+                    <label class="control-label" for="catmenu">Menu</label>
+                    <input type="text" ng-model="catmenu.nombre" placeholder="Escriba el nombre del menu" typeahead="nombre as cat.nombre for cat in buscaCatmenus($viewValue) | limitTo:5" typeahead-loading="loadingCatmenus" class="form-control" typeahead-on-select='seleccionarCatmenu($item)' typeahead-template-url="modules/catmenus/views/seleccion.html" id='catmenu' focus-on="{{focusMenu}}">
+                    <i ng-show="loadingCatmenus" class="glyphicon glyphicon-refresh"></i>
                 </div>
 
                 <div data-ng-show="error" class="text-danger">
