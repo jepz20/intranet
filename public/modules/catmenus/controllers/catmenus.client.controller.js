@@ -263,4 +263,20 @@ angular.module('catmenus').controller('CatmenusController', ['$scope', '$statePa
     $scope.regresar = function() {
         $window.history.back();
     };
+
+    /**
+     *Asigna un menu al usuario en caso que ya exista uno lo reemplaza
+     **/
+     $scope.asignaMenuAUsuario = function() {
+        var datos = {};
+        datos.usuario = $scope.usuario._id;
+        datos.menu = $scope.catmenu._id;
+        console.log('datos');
+        console.log(datos);
+        $http.post('users/asigna_menu', datos)
+        .then( function(usuario) {
+            console.log(usuario);
+            $scope.regresar;
+        });
+     };
 }]);

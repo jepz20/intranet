@@ -52,8 +52,9 @@ module.exports = function(app) {
 	app.route('/auth/github').get(passport.authenticate('github'));
 	app.route('/auth/github/callback').get(users.oauthCallback('github'));
 
-	// para asignar el menu
+	// listado de todos los usuarios
 	app.route('/users/listado').get(users.list);
+	app.route('/users/asigna_menu').post(users.asignarMenuAUsuario);
 
 	// Finish by binding the user middleware
 	app.param('userId', users.userByID);

@@ -77,3 +77,18 @@ exports.list = function(req, res) {
         }
     });
 };
+
+exports.asignarMenuAUsuario = function(req,res,next) {
+    var datos = req.body;
+    console.log(datos);
+    User.findById(datos.usuario).exec(function(err,usuario) {
+        if (err) {
+            console.log(err);
+            res.send(err);
+        };
+        usuario.menu = datos.menu;
+        usuario.save(function(usuario) {
+            res.send(usuario);
+        });
+    });
+};
