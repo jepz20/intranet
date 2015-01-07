@@ -129,6 +129,7 @@ exports.list = function(req, res) {
 	.sort(sort)
     .limit(limite)
 	.populate('user', 'displayName')
+    .populate('programas')
 	.exec(function(err, catmenus) {
 		if (err) {
 			return res.status(400).send({

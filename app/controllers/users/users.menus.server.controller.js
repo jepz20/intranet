@@ -85,7 +85,7 @@ exports.asignarMenuAUsuario = function(req,res,next) {
         if (err) {
             console.log(err);
             res.send(err);
-        };
+        }
         usuario.menu = datos.menu;
         usuario.save(function(usuario) {
             res.send(usuario);

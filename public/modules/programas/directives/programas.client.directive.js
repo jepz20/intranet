@@ -197,6 +197,7 @@ angular.module('programas')
             scope.$watch('drawer.shown',function(value) {
             $timeout(function() {
                 if ( value ) {
+                    scope.findProgramasUsuario();
                     scope.filtro = undefined;
                     document.getElementById('filtro').focus();
                 }

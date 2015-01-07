@@ -2,8 +2,8 @@
 
 // Programas controller
 angular.module('programas').controller('ProgramasController', ['$scope', '$rootScope', '$stateParams', '$location',
- '$window', '$timeout', 'Authentication', 'Programas', 'Grupos', 'CargarArchivo', 'ManejoDrawer', 'Almacenados',
- function($scope, $rootScope, $stateParams, $location, $window, $timeout, Authentication, Programas, Grupos, CargarArchivo, ManejoDrawer, Almacenados ) {
+ '$window', '$timeout', '$http', 'Authentication', 'Programas', 'Grupos', 'CargarArchivo', 'ManejoDrawer', 'Almacenados',
+ function($scope, $rootScope, $stateParams, $location, $window, $timeout, $http, Authentication, Programas, Grupos, CargarArchivo, ManejoDrawer, Almacenados ) {
 		$scope.authentication = Authentication;
 
 		// Create new Programa
@@ -113,6 +113,28 @@ angular.module('programas').controller('ProgramasController', ['$scope', '$rootS
 				$scope.grupo.selected = response.grupo;
 				$scope.inicioCreaEdita();
 			});
+		};
+
+		$scope.findProgramasUsuario = function() {
+			if (Authentication.user) {
+				if (Authentication.user.menu) {
+					$http.get('/catmenus/' + Authentication.user.menu)
+						.then(function (menu) {
+							$scope.programas = menu.data.programas;
+					});
+				}
+			}
+			if (!$scope.programas) {
+				$http.get('catmenus/', {
+                	params: {
+                	    nombre: 'invitado',
+                    	limit: 1
+                	}
+            	})
+            	.then(function (menu) {
+					$scope.programas = menu.data[0].programas;
+				});
+			}
 		};
 
 		//Se crea el objetos de grupo vacio para que pueda usarlo el uiselect

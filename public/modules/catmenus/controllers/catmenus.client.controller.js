@@ -276,7 +276,7 @@ angular.module('catmenus').controller('CatmenusController', ['$scope', '$statePa
         $http.post('users/asigna_menu', datos)
         .then( function(usuario) {
             console.log(usuario);
-            $scope.regresar;
+            $scope.regresar();
         });
      };
 }]);
